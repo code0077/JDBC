@@ -2,7 +2,7 @@ package jdbcAPICodes;
 
 import java.sql.*;
 
-public class ConnnectionProgramRecommended {
+public class PreparedStatements {
 	public static void main(String[] args) {
 		Connection con = null;
 		try {

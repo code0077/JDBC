@@ -2,7 +2,7 @@ package jdbcAPICodes;
 
 import java.sql.*;
 
-public class ConnnectionProgramRecommended {
+public class BatchUpdates {
 	public static void main(String[] args) {
 		Connection con = null;
 		try {
@@ -12,14 +12,27 @@ public class ConnnectionProgramRecommended {
 		}
 		PreparedStatement prep = null;
 		try {
-			prep = con.prepareStatement("SELECT * FROM examples WHERE id = ?");
-			prep.setInt(1, 17);
-			ResultSet rs = prep.executeQuery();
-			while (rs.next()) {
-				int id = rs.getInt("id");
-				String name = rs.getString("name");
-				System.out.print("ID: " + id);
-				System.out.print(", Name: " + name);
+			con.setAutoCommit(false);
+			prep = con.prepareStatement("INSERT INTO examples VALUES( " + "?, ?)");
+			prep.setInt(1, 19);
+			prep.setString(2, "Vamshi");
+			prep.addBatch();
+
+			prep.setInt(1, 29);
+			prep.setString(2, "Manoj");
+			prep.addBatch();
+
+			int c = 0;
+			int updates[] = prep.executeBatch();
+			for (int v : updates) {
+				if (v == 1) {
+					c++;
+				}
+			}
+			if (c == 2) {
+				con.commit();
+			} else {
+				System.out.println("TRANSACTION ABORTED!!!");
 			}
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
